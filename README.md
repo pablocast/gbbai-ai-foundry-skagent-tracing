@@ -1,4 +1,4 @@
-# <img src="./utils/media/ai_foundry.png" alt="Azure Foundry" style="width:80px;height:30px;"/> Azure AI Foundry Agent with Agentic Retrieval Tool
+# <img src="./utils/media/ai_foundry.png" alt="Azure Foundry" style="width:80px;height:30px;"/> Azure AI Foundry Tracing for a Semantic Kernel Agent
 
 This directory contains Jupyter notebooks for hands-on exercises with Azure AI Foundry.
 
@@ -34,8 +34,12 @@ This directory contains Jupyter notebooks for hands-on exercises with Azure AI F
    
    After running, an `.env` file will be created with all necessary environment variables
 
-3. **Running the Notebooks**
-   - Open the notebook [notebook's folder](1-notebooks/) and execute the notebook
+3. **Running the Chat**
+   ```bash
+   source .venv/bin/activate
+   python src/main.py
+   
+   ```
 
 4. **Delete the Resources**
     ```bash
