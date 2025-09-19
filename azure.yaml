@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: ai-foundry-deployment
+metadata:
+  template: ai-foundry-deployment@0.0.1-beta
+infra:
+  provider: bicep
+  path: infra
+hooks:
+  postdeploy:
+    posix:
+      shell: sh
+      run: |
+        echo "Deployment complete"
+        echo "Setting up environment variables..."
+        chmod +x ./infra/scripts/set-env.sh
+        ./infra/scripts/set-env.sh
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host "Deployment complete"
+        Write-Host "Setting up environment variables..."
+        .\infra\scripts\set-env.ps1
