@@ -30,8 +30,6 @@ AOAI_API_BASE=$(Get-AzdValue $azdEnvValues "AOAI_API_BASE")
 AOAI_API_VERSION=$(Get-AzdValue $azdEnvValues "AOAI_API_VERSION")
 AOAI_LLM_MODEL=$(Get-AzdValue $azdEnvValues "AOAI_LLM_MODEL")
 AOAI_LLM_DEPLOYMENT=$(Get-AzdValue $azdEnvValues "AOAI_LLM_DEPLOYMENT")
-AOAI_EMBEDDING_MODEL=$(Get-AzdValue $azdEnvValues "AOAI_EMBEDDING_MODEL")
-AOAI_EMBEDDING_DEPLOYMENT=$(Get-AzdValue $azdEnvValues "AOAI_EMBEDDING_DEPLOYMENT")
 
 # ---- Additional Endpoints ----
 PROJECT_ENDPOINT=$(Get-AzdValue $azdEnvValues "PROJECT_ENDPOINT")

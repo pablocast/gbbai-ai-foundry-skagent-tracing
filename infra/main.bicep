@@ -280,8 +280,6 @@ output AOAI_API_BASE string = aiServices_module.outputs.accountTarget
 output AOAI_API_VERSION string = '2025-03-01-preview'
 output AOAI_LLM_MODEL string = length(models) > 1 ? models[1].name : 'gpt-4.1'
 output AOAI_LLM_DEPLOYMENT string = length(models) > 1 ? models[1].name : 'gpt-4.1'
-output AOAI_EMBEDDING_MODEL string = length(models) > 2 ? models[2].name : 'text-embedding-3-large'
-output AOAI_EMBEDDING_DEPLOYMENT string = length(models) > 2 ? models[2].name : 'text-embedding-3-large'
 
 // Outputs for environment variables
 output PROJECT_ENDPOINT string = aiProject.outputs.projectEndpoint

@@ -20,8 +20,6 @@ AOAI_API_BASE=$(azd env get-values | grep AOAI_API_BASE | cut -d'=' -f2 | tr -d 
 AOAI_API_VERSION=$(azd env get-values | grep AOAI_API_VERSION | cut -d'=' -f2 | tr -d '"')
 AOAI_LLM_MODEL=$(azd env get-values | grep AOAI_LLM_MODEL | cut -d'=' -f2 | tr -d '"')
 AOAI_LLM_DEPLOYMENT=$(azd env get-values | grep AOAI_LLM_DEPLOYMENT | cut -d'=' -f2 | tr -d '"')
-AOAI_EMBEDDING_MODEL=$(azd env get-values | grep AOAI_EMBEDDING_MODEL | cut -d'=' -f2 | tr -d '"')
-AOAI_EMBEDDING_DEPLOYMENT=$(azd env get-values | grep AOAI_EMBEDDING_DEPLOYMENT | cut -d'=' -f2 | tr -d '"')
 
 # ---- Additional Endpoints ----
 PROJECT_ENDPOINT=$(azd env get-values | grep PROJECT_ENDPOINT | cut -d'=' -f2 | tr -d '"')

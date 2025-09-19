@@ -21,13 +21,6 @@ param models = [
     skuName: 'GlobalStandard'
     capacity: 1000
   }
-  {
-    name: 'text-embedding-3-large'
-    format: 'OpenAI'
-    version: '1'
-    skuName: 'Standard'
-    capacity: 350
-  }
 ]
 param aiSearchResourceId = ''
 param azureStorageAccountResourceId = ''
