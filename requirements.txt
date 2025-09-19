@@ -38,6 +38,7 @@ mcp
 black[jupyter]
 
 # Semantic Kernel
+aiortc
 semantic-kernel==1.23.0
 
 

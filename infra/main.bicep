@@ -285,6 +285,6 @@ output AOAI_LLM_DEPLOYMENT string = length(models) > 1 ? models[1].name : 'gpt-4
 output PROJECT_ENDPOINT string = aiProject.outputs.projectEndpoint
 output MODEL_DEPLOYMENTS array = aiServices_module.outputs.deployedModels
 output AZURE_SEARCH_ENDPOINT string = 'https://${dependencies.outputs.aiSearchName}.search.windows.net'
-output AZURE_OPENAI_ENDPOINT string = aiServices_module.outputs.accountTarget
+output AZURE_OPENAI_ENDPOINT string = 'https://${aiServices_module.outputs.accountName}.openai.azure.com'
 output APPLICATION_INSIGHTS_CONNECTION_STRING string = dependencies.outputs.applicationInsightsConnectionString
 

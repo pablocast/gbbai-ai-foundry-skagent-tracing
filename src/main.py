@@ -74,7 +74,7 @@ kernel.add_plugin(LocationPlugin(), "LocationPlugin")
 chat_function = kernel.add_function(
     plugin_name="ChatBot",
     function_name="Chat",
-    prompt="{{$chat_history}}{{$user_input}}",
+    prompt="You provide information about temperature. {{$chat_history}}{{$user_input}}",
     template_format="semantic-kernel",
 )
 
@@ -82,7 +82,7 @@ settings: PromptExecutionSettings = (
     kernel.get_prompt_execution_settings_from_service_id(service_id=service_id)
 )
 settings.function_choice_behavior = FunctionChoiceBehavior.Auto(
-    filters={"included_plugins": ["WeatherPlugin", "LocationPlugin"]}
+    filters={"excluded_plugins": ["ChatBot"]}
 )
 
 settings.seed = 42
@@ -91,11 +91,10 @@ settings.temperature = 0
 
 chat_history = ChatHistory()
 
-
 # === Chat function ==============
 async def chat() -> bool:
     try:
-        prompt = input("User:> ")
+        user_input = input("User:> ")
     except KeyboardInterrupt:
         print("\n\nExiting chat...")
         return False
@@ -103,16 +102,22 @@ async def chat() -> bool:
         print("\n\nExiting chat...")
         return False
 
-    if prompt == "exit":
+    if user_input == "exit":
         print("\n\nExiting chat...")
         return False
 
-    async for update in kernel.invoke_prompt_stream(
-        prompt=prompt,
-        arguments=KernelArguments(settings=settings)
+    print("Assistant:> ", end="", flush=True)
+    async for update in kernel.invoke_stream(
+        function=chat_function,
+        arguments=KernelArguments(user_input=user_input, chat_history=chat_history, settings=settings)
     ):
-        print(update[0].content, end="")
-    
+        print(f"{update[0].content}", end="", flush=True)
+     
+    print()
+
+    chat_history.add_user_message(user_input)
+    chat_history.add_assistant_message(update[0].content if update else "")
+
     return True
 
 
@@ -121,7 +126,7 @@ async def main() -> None:
     print(
         "Welcome to your weather assistant.\
         \n  Type 'exit' to exit.\
-        \n  Please enter the following information to get the weather: the location, the date and time."
+        \n  Please enter the following information to get the weather: the location."
     )
     while chatting:
         chatting = await chat()

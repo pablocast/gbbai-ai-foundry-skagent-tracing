@@ -66,24 +66,24 @@ resource modelDeployment1 'Microsoft.CognitiveServices/accounts/deployments@2025
   ]
 }
 
-resource modelDeployment2 'Microsoft.CognitiveServices/accounts/deployments@2025-04-01-preview' = if (length(models) > 2) {
-  parent: aiServicesAccount
-  name: models[2].name
-  sku: {
-    capacity: models[2].capacity
-    name: models[2].skuName
-  }
-  properties: {
-    model: {
-      name: models[2].name
-      format: models[2].format
-      version: models[2].version
-    }
-  }
-  dependsOn: [
-    modelDeployment1
-  ]
-}
+// resource modelDeployment2 'Microsoft.CognitiveServices/accounts/deployments@2025-04-01-preview' = if (length(models) > 2) {
+//   parent: aiServicesAccount
+//   name: models[2].name
+//   sku: {
+//     capacity: models[2].capacity
+//     name: models[2].skuName
+//   }
+//   properties: {
+//     model: {
+//       name: models[2].name
+//       format: models[2].format
+//       version: models[2].version
+//     }
+//   }
+//   dependsOn: [
+//     modelDeployment1
+//   ]
+// }
 
 // Cognitive Services
 resource cogServices 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
