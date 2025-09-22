@@ -80,6 +80,7 @@ def set_up_metrics():
             # Dropping all instrument names except for those starting with "semantic_kernel"
             View(instrument_name="*", aggregation=DropAggregation()),
             View(instrument_name="semantic_kernel*"),
+            View(instrument_name="gen_ai*"),
         ],
     )
     # Sets the global default meter provider

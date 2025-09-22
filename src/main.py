@@ -17,13 +17,14 @@ from semantic_kernel.connectors.ai.azure_ai_inference import (
 )
 from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
 from azure.ai.inference.aio import ChatCompletionsClient
-import logging
-import json
 
 # ==== Own imports ====
 from plugins import WeatherPlugin, LocationPlugin
+# from insights_logging import set_up_logging, set_up_tracing, set_up_metrics
 from insights_logging import set_up_logging, set_up_tracing, set_up_metrics
+from dotenv import load_dotenv
 
+load_dotenv(override=True)
 
 # ==== Set up tracing and logging ====
 set_up_logging()
@@ -104,12 +105,13 @@ agent = ChatCompletionAgent(
 )
 
 
-
 # === Chat function ==============
 async def chat() -> bool:
     thread: ChatHistoryAgentThread = None
+
     try:
         user_input = input("User:> ")
+
     except KeyboardInterrupt:
         print("\n\nExiting chat...")
         return False
@@ -125,6 +127,7 @@ async def chat() -> bool:
 
     print("Assistant:> ", end="", flush=True)
     first_chunk = True
+
     async for response in agent.invoke_stream(
                 messages=user_input,
                 thread=thread,

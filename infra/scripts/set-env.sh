@@ -26,7 +26,7 @@ PROJECT_ENDPOINT=$(azd env get-values | grep PROJECT_ENDPOINT | cut -d'=' -f2 | 
 AZURE_SEARCH_ENDPOINT=$(azd env get-values | grep AZURE_SEARCH_ENDPOINT | cut -d'=' -f2 | tr -d '"')
 AZURE_OPENAI_ENDPOINT=$(azd env get-values | grep AZURE_OPENAI_ENDPOINT | cut -d'=' -f2 | tr -d '"')
 APPLICATION_INSIGHTS_CONNECTION_STRING=$(azd env get-values | grep APPLICATION_INSIGHTS_CONNECTION_STRING | cut -d'=' -f2 | tr -d '"')
-
+SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS_SENSITIVE=true
 EOF
 
 echo ".env file created successfully with deployment outputs!"
