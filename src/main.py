@@ -67,17 +67,6 @@ kernel = Kernel()
 
 service_id = "sk-agent"
 
-# ai_service = AzureAIInferenceChatCompletion(
-#     service_id=service_id,
-#     ai_model_id=deployment,
-#     client=ChatCompletionsClient(
-#         endpoint=f"{str(endpoint)}/openai/deployments/{deployment}",
-#         credential=DefaultAzureCredential(),
-#         credential_scopes=["https://cognitiveservices.azure.com/.default"],
-#         api_version=api_version,
-#     ),
-# )
-
 ai_service = AzureChatCompletion(
     service_id=service_id,
     endpoint=endpoint,
