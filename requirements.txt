@@ -39,7 +39,7 @@ black[jupyter]
 
 # Semantic Kernel
 aiortc
-semantic-kernel
+semantic-kernel==1.37.0
 
 
 # Tracing
