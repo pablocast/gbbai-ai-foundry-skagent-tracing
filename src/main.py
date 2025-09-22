@@ -7,7 +7,7 @@ from semantic_kernel.connectors.ai.open_ai import (
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
-from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents import ChatMessageContent, FunctionCallContent, FunctionResultContent
 from semantic_kernel.connectors.ai import FunctionChoiceBehavior
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
@@ -15,6 +15,7 @@ from semantic_kernel.connectors.ai.azure_ai_inference import (
     AzureAIInferenceChatPromptExecutionSettings,
     AzureAIInferenceChatCompletion,
 )
+from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
 from azure.ai.inference.aio import ChatCompletionsClient
 import logging
 import json
@@ -50,6 +51,16 @@ async def stream_processor(response):
             await asyncio.sleep(0.1)
             yield str(message[0])
 
+
+async def handle_streaming_intermediate_steps(message: ChatMessageContent) -> None:
+    for item in message.items or []:
+        if isinstance(item, FunctionResultContent):
+            print(f"Function Result:> {item.result} for function: {item.name}")
+        elif isinstance(item, FunctionCallContent):
+            print(f"Function Call:> {item.name} with arguments: {item.arguments}")
+        else:
+            print(f"{item}")
+
 # === Kernel Settings ==============
 kernel = Kernel()
 
@@ -71,28 +82,32 @@ kernel.add_service(ai_service)
 kernel.add_plugin(WeatherPlugin(), "WeatherPlugin")
 kernel.add_plugin(LocationPlugin(), "LocationPlugin")
 
-chat_function = kernel.add_function(
-    plugin_name="ChatBot",
-    function_name="Chat",
-    prompt="You provide information about temperature. {{$chat_history}}{{$user_input}}",
-    template_format="semantic-kernel",
-)
-
 settings: PromptExecutionSettings = (
     kernel.get_prompt_execution_settings_from_service_id(service_id=service_id)
 )
-settings.function_choice_behavior = FunctionChoiceBehavior.Auto(
-    filters={"excluded_plugins": ["ChatBot"]}
-)
+settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
 
 settings.seed = 42
 settings.max_tokens = 16000
 settings.temperature = 0
 
-chat_history = ChatHistory()
+# === Create Agent ==================
+instructions = """
+You are a helpful assistant that helps the user get the weather forecast.
+"""
+
+agent = ChatCompletionAgent(
+    kernel=kernel,
+    name="WeatherAssistant",
+    instructions=instructions,
+    arguments=KernelArguments(settings=settings),
+)
+
+
 
 # === Chat function ==============
 async def chat() -> bool:
+    thread: ChatHistoryAgentThread = None
     try:
         user_input = input("User:> ")
     except KeyboardInterrupt:
@@ -100,23 +115,27 @@ async def chat() -> bool:
         return False
     except EOFError:
         print("\n\nExiting chat...")
+        await thread.delete() if thread else None
         return False
 
     if user_input == "exit":
         print("\n\nExiting chat...")
+        await thread.delete() if thread else None
         return False
 
     print("Assistant:> ", end="", flush=True)
-    async for update in kernel.invoke_stream(
-        function=chat_function,
-        arguments=KernelArguments(user_input=user_input, chat_history=chat_history, settings=settings)
-    ):
-        print(f"{update[0].content}", end="", flush=True)
-     
+    first_chunk = True
+    async for response in agent.invoke_stream(
+                messages=user_input,
+                thread=thread,
+                on_intermediate_message=handle_streaming_intermediate_steps,
+            ):
+        thread = response.thread
+        if first_chunk:
+            print(f"# {response.name}: ", end="", flush=True)
+            first_chunk = False
+        print(response.content, end="", flush=True)
     print()
-
-    chat_history.add_user_message(user_input)
-    chat_history.add_assistant_message(update[0].content if update else "")
 
     return True
 
@@ -131,6 +150,7 @@ async def main() -> None:
     while chatting:
         chatting = await chat()
 
+    
 
 if __name__ == "__main__":
     asyncio.run(main())
