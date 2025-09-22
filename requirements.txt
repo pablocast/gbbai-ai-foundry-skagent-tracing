@@ -1,6 +1,6 @@
 # Azure SDK and AI Services
 azure-identity                                # Azure authentication and credentials management
-azure-ai-projects==1.0.0b12                         # Azure AI project management
+azure-ai-projects                             # Azure AI project management
 azure-ai-inference[opentelemetry]             # Azure AI inference with OpenTelemetry support
 azure-ai-inference[prompts]
 azure-ai-evaluation                           # Azure AI model evaluation tools
